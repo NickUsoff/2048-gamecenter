@@ -18,6 +18,7 @@
   "homepage": "https://github.com/nusoff01/webcenter",
   "dependencies": {
     "logfmt": "~1.1.2",
-    "express": "~3.5.1"
+    "express": "~3.5.1",
+    "mongodb": "~1.4.0"
   }
 }
