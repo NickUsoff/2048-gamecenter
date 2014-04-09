@@ -1,1 +1,1 @@
-web: node gamecenter.js
+web: node webcenter.js
