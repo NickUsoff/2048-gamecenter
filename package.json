@@ -1,0 +1,23 @@
+{
+  "name": "2048-gamecenter",
+  "version": "0.0.0",
+  "description": "gamecenter for the game 2048",
+  "main": "webcenter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nusoff01/webcenter.git"
+  },
+  "author": "nusoff01",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nusoff01/webcenter/issues"
+  },
+  "homepage": "https://github.com/nusoff01/webcenter",
+  "dependencies": {
+    "logfmt": "~1.1.2",
+    "express": "~3.5.1"
+  }
+}
