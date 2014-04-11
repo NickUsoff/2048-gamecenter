@@ -38,20 +38,20 @@ app.get('/', function(req, res) {
 app.get('/scores.json', function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
-	userName = "";
+	
 	userName = req.query.username;
 	//proceed only if the username exists
-	if(userName != ""){
+	if(userName){
 		db.collection('scores', function(error, collection) {
-			var options = {
-	    		"sort": "score"
-			}
-			collection.find().sort( { score: -1 } ).toArray(function(err, docs){
+			collection.find({username:userName}).sort( { score: -1 } ).toArray(function(err, docs){
 	    		res.set('Content-Type', 'text/json');
 	  			res.send(docs);
 			});
 			
   		});
+	}
+	else{
+		res.send(["Please enter a username!"]);
 	}
 
 });
