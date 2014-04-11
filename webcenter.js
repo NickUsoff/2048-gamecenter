@@ -24,14 +24,14 @@ app.listen(port, function() {
 });
 
 
-
-
-//default display
+//default display, shows username, score, and timestamp for each entry in 
+//descending order of score
 app.get('/', function(req, res) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	db.collection('scores', function(error, collection) {
 		collection.find().sort( { score: -1 } ).toArray(function(err, docs){
+			//style all of the scores and display them
 			var resString = "<html style='font-size:40px'>";
 			resString += "<head><style>"
 						+ "body{font-family:tahoma;text-align:center}"
@@ -51,7 +51,6 @@ app.get('/', function(req, res) {
 	  		res.end(resString);
 		});
 	});
-  	
 });
 
 
@@ -62,14 +61,13 @@ app.get('/scores.json', function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	userName = req.query.username;
+	res.set('Content-Type', 'text/json');
 	//proceed only if the username exists
 	if(userName){
 		db.collection('scores', function(error, collection) {
 			collection.find({username:userName}).sort( { score: -1 } ).toArray(function(err, docs){
-	    		res.set('Content-Type', 'text/json');
 	  			res.send(docs);
 			});
-			
   		});
 	}
 	else{
@@ -92,36 +90,9 @@ app.post('/submit.json', function(req,res){
 	    if(!(!userName || !score || !grid)){ //validation to ensure all parameters entered
 		    theDocument = {"username":userName,"score":score,"grid":grid,"created_at":time};
 		    collection.insert(theDocument, function(error, saved) {
-
-		      // What you really want to do here: if there was an error inserting the data into the collection in MongoDB, send an error. Otherwise, send OK (e.g., 200 status code)
-		      res.send(200);
+		        res.send(200);
 		    });
 		}
   	});
 
 });
-
-
-// app.get('/play', function(request, response) {
-//   // Send data to this web application via:
-//   //   curl --data "playdata=blah..." http://[domain here, e.g., localhost]:3000/play
-//   userinput = "blargh";
-//   //userinput = request.body.playdata;
-//   console.log("Someone sent me some data: " + userinput);
-
-//   // Let's insert whatever was sent to this web application (read: NSFW) to a collection named 'abyss' on MongoDB
-
-	
-
-//   // 1. Specify a collection to use
-//   db.collection('testCol', function(error, collection) {
-
-//     // 2. Put data into the collectiontheDocument = {"dump":userinput};
-//     theDocument = {"dump":userinput};
-//     collection.insert(theDocument, function(error, saved) {
-
-//       // What you really want to do here: if there was an error inserting the data into the collection in MongoDB, send an error. Otherwise, send OK (e.g., 200 status code)
-//       response.send(200);
-//     });
-//   });
-// });
