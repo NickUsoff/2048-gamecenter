@@ -1,4 +1,4 @@
-2048 Game Center
+2048 Game Center - Nick Usoff
 
 This assignment focused on submitting data from the end of a game of 2048 to a web server using a Node.js web application. The web application has two APIs: /submit.json is a POST request that  takes in a username, score, and grid and inputs that data (if it's all there) to the database along with a timestamp. /scores.json is a GET request which takes a username string and lists all the data for each game played by that user, in descending order of score. Finally, the application has a "/" homepage which shows each game in order of score. This output is stylized. 
 
