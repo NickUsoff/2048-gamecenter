@@ -13,6 +13,7 @@ var db = mongo.Db.connect(mongoUri, function (error, databaseConnection) {
 	db = databaseConnection;
 });
 
+
 app.use(logfmt.requestLogger());
 app.use(express.json());
 app.use(express.urlencoded());
@@ -22,10 +23,7 @@ app.listen(port, function() {
   console.log("Listening on " + port);
 });
 
-//utility to check if string doesn't exist/is empty
-function isEmpty(str) {
-    return (!str || 0 === str.length);
-}
+
 
 
 //default display
@@ -37,10 +35,24 @@ app.get('/', function(req, res) {
 
 // Returns a JSON string (array of objects) for a specified 
 //player with the scores sorted in descending order
-app.get('scores.json', function(req,res){
+app.get('/scores.json', function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
-	//userName = req.
+	userName = "";
+	userName = req.query.username;
+	//proceed only if the username exists
+	if(userName != ""){
+		db.collection('scores', function(error, collection) {
+			var options = {
+	    		"sort": "score"
+			}
+			collection.find().sort( { score: -1 } ).toArray(function(err, docs){
+	    		res.set('Content-Type', 'text/json');
+	  			res.send(docs);
+			});
+			
+  		});
+	}
 
 });
 
@@ -51,19 +63,19 @@ app.post('/submit.json', function(req,res){
 
 	db.collection('scores', function(error, collection) {
 
-    userName = req.body.username;
-    score = req.body.score;
-    grid = req.body.grid;
-    time = new Date();
-    if(!(!userName || !score || !grid)){ //validation to ensure all parameters entered
-	    theDocument = {"username":userName,"score":score,"grid":grid,"created_at":time};
-	    collection.insert(theDocument, function(error, saved) {
+	    userName = req.body.username;
+	    score = parseInt(req.body.score);
+	    grid = req.body.grid;
+	    time = new Date();
+	    if(!(!userName || !score || !grid)){ //validation to ensure all parameters entered
+		    theDocument = {"username":userName,"score":score,"grid":grid,"created_at":time};
+		    collection.insert(theDocument, function(error, saved) {
 
-	      // What you really want to do here: if there was an error inserting the data into the collection in MongoDB, send an error. Otherwise, send OK (e.g., 200 status code)
-	      res.send(200);
-	    });
-	}
-  });
+		      // What you really want to do here: if there was an error inserting the data into the collection in MongoDB, send an error. Otherwise, send OK (e.g., 200 status code)
+		      res.send(200);
+		    });
+		}
+  	});
 
 });
 
