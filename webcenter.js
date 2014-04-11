@@ -28,7 +28,30 @@ app.listen(port, function() {
 
 //default display
 app.get('/', function(req, res) {
-  res.send("Welcomezz");
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	db.collection('scores', function(error, collection) {
+		collection.find().sort( { score: -1 } ).toArray(function(err, docs){
+			var resString = "<html style='font-size:40px'>";
+			resString += "<head><style>"
+						+ "body{font-family:tahoma;text-align:center}"
+						+ "table{margin:0 auto;border:1px solid black}"
+						+ "td{padding:6px}"
+						+ "</style></head>";
+			resString += "<body><div><h1>2048 Score Board</h1></div><table>";
+			for(var i = 0; i < docs.length; i++){
+				resString += "<tr>";
+				resString += "<td>" + docs[i].username + "</td>";
+				resString += "<td>" + docs[i].score + "</td>";
+				resString += "<td>" + docs[i].created_at + "</td>";
+				resString += "</tr>";
+			}
+			resString +="</table></body></html>";
+	    	res.set('Content-Type', 'text/html');
+	  		res.end(resString);
+		});
+	});
+  	
 });
 
 
@@ -38,7 +61,6 @@ app.get('/', function(req, res) {
 app.get('/scores.json', function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
-	
 	userName = req.query.username;
 	//proceed only if the username exists
 	if(userName){
