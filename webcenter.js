@@ -17,23 +17,30 @@ app.use(logfmt.requestLogger());
 app.use(express.json());
 app.use(express.urlencoded());
 
-
-
-app.get('/', function(req, res) {
-  res.send("Welcomezz");
-});
-
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
 
+//utility to check if string doesn't exist/is empty
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
+
+//default display
+app.get('/', function(req, res) {
+  res.send("Welcomezz");
+});
+
+
+
 // Returns a JSON string (array of objects) for a specified 
 //player with the scores sorted in descending order
 app.get('scores.json', function(req,res){
-
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	//userName = req.
 
 });
 
@@ -46,15 +53,16 @@ app.post('/submit.json', function(req,res){
 
     userName = req.body.username;
     score = req.body.score;
-    grid = req.body.grid
+    grid = req.body.grid;
     time = new Date();
+    if(!(!userName || !score || !grid)){ //validation to ensure all parameters entered
+	    theDocument = {"username":userName,"score":score,"grid":grid,"created_at":time};
+	    collection.insert(theDocument, function(error, saved) {
 
-    theDocument = {"username":userName,"score":score,"grid":grid,"created_at":time};
-    collection.insert(theDocument, function(error, saved) {
-
-      // What you really want to do here: if there was an error inserting the data into the collection in MongoDB, send an error. Otherwise, send OK (e.g., 200 status code)
-      res.send(200);
-    });
+	      // What you really want to do here: if there was an error inserting the data into the collection in MongoDB, send an error. Otherwise, send OK (e.g., 200 status code)
+	      res.send(200);
+	    });
+	}
   });
 
 });
